@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Note that some adapters may set a maximum length for the String type by default, please ensure your strings are long
+// enough when changing adapters.
+// See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
+datasource db {
+  provider = "sqlite"
+  url      = "file:dev.sqlite"
+}
+
+model Session {
+  id            String    @id
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+model PricingRule {
+  id            String   @id @default(cuid())
+  shop          String
+  name          String
+  enabled       Boolean  @default(true)
+  unit          String   @default("in")
+  formulaType   String   @default("area_plus_depth")
+  basePrice     Float    @default(0)
+  areaRate      Float    @default(0)
+  depthRate     Float    @default(0)
+  volumeRate    Float    @default(0)
+  depthEnabled  Boolean  @default(false)
+  minWidth      Float    @default(1)
+  maxWidth      Float    @default(100)
+  minHeight     Float    @default(1)
+  maxHeight     Float    @default(100)
+  minDepth      Float    @default(0)
+  maxDepth      Float    @default(10)
+  rounding      String   @default("nearest_0_01")
+  currencyCode  String   @default("USD")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  productMappings ProductPricing[]
+}
+
+model ProductPricing {
+  id                 String   @id @default(cuid())
+  shop               String
+  productId          String
+  baseVariantId      String
+  pricingRuleId      String
+  cropRequired       Boolean  @default(false)
+  surchargeVariantId String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  pricingRule PricingRule @relation(fields: [pricingRuleId], references: [id], onDelete: Cascade)
+
+  @@unique([shop, productId])
+}

@@ -1,0 +1,49 @@
+<div
+  id="measurement-pricer-root"
+  data-product-id="{{ product.id }}"
+  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+  data-app-proxy-base="/apps/measurement-pricer"
+  data-button-text="{{ block.settings.button_text }}"
+  data-depth-enabled="{{ block.settings.depth_enabled }}"
+  data-crop-required="{{ block.settings.crop_required }}"
+  data-unit="{{ block.settings.unit }}"
+></div>
+
+{% schema %}
+{
+  "name": "Measurement pricer",
+  "target": "section",
+  "stylesheet": "measurement-pricer.css",
+  "javascript": "measurement-pricer.js",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Add custom item"
+    },
+    {
+      "type": "checkbox",
+      "id": "depth_enabled",
+      "label": "Enable depth",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "crop_required",
+      "label": "Crop required",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "unit",
+      "label": "Unit",
+      "options": [
+        { "value": "in", "label": "Inches" },
+        { "value": "cm", "label": "Centimeters" }
+      ],
+      "default": "in"
+    }
+  ]
+}
+{% endschema %}
